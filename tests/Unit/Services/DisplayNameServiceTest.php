@@ -1,12 +1,12 @@
 <?php
 
-namespace Tipoff\LaravelAgoraApi\Tests\Unit\Services;
+namespace AbdullahFaqeir\LaravelAgoraApi\Tests\Unit\Services;
 
 use Exception;
 use Illuminate\Support\Facades\Config;
 use stdClass;
-use Tipoff\LaravelAgoraApi\Services\DisplayNameService;
-use Tipoff\LaravelAgoraApi\Tests\TestCase;
+use AbdullahFaqeir\LaravelAgoraApi\Services\DisplayNameService;
+use AbdullahFaqeir\LaravelAgoraApi\Tests\TestCase;
 
 class AgoraControllerTest extends TestCase
 {
@@ -33,7 +33,7 @@ class AgoraControllerTest extends TestCase
 
     public function testGenerateDisplayNameFromMultipleFields()
     {
-        Config::set('agora.user_display_name.fields', [
+        Config::set('laravel-agora-api.user_display_name.fields', [
             'first_name',
             'last_name',
         ]);

@@ -2,12 +2,12 @@
 
 return [
     'credentials' => [
-        'app_id' => env('AGORA_APP_ID'),
+        'app_id'      => env('AGORA_APP_ID'),
         'certificate' => env('AGORA_APP_CERTIFICATE'),
     ],
 
     'routes' => [
-        'prefix' => env('AGORA_ROUTE_PREFIX', 'agora'),
+        'prefix'     => env('AGORA_ROUTE_PREFIX', 'agora'),
         'middleware' => [
             'web',
             'auth',
@@ -17,9 +17,9 @@ return [
     'channel_name' => env('AGORA_CHANNEL_NAME', 'agora-channel'),
 
     'user_display_name' => [
-        'fields' => [
+        'fields'    => [
             'name',
         ],
-        'separator' => ' '
-    ]
+        'separator' => ' ',
+    ],
 ];

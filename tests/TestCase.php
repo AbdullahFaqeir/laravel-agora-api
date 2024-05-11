@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Tipoff\LaravelAgoraApi\Tests;
+namespace AbdullahFaqeir\LaravelAgoraApi\Tests;
 
 use Spatie\Permission\PermissionServiceProvider;
-use Tipoff\Authorization\AuthorizationServiceProvider;
-use Tipoff\LaravelAgoraApi\LaravelAgoraApiServiceProvider;
-use Tipoff\Support\SupportServiceProvider;
-use Tipoff\TestSupport\BaseTestCase;
+use AbdullahFaqeir\Authorization\AuthorizationServiceProvider;
+use AbdullahFaqeir\LaravelAgoraApi\LaravelAgoraApiServiceProvider;
+use AbdullahFaqeir\Support\SupportServiceProvider;
+use AbdullahFaqeir\TestSupport\BaseTestCase;
 
 class TestCase extends BaseTestCase
 {

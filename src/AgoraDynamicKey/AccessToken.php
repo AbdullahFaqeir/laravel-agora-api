@@ -1,116 +1,69 @@
 <?php
 
-namespace Tipoff\LaravelAgoraApi\AgoraDynamicKey;
+namespace AbdullahFaqeir\LaravelAgoraApi\AgoraDynamicKey;
 
-class Message
-{
-    public $salt;
-    public $ts;
-    public $privileges;
-
-    public function __construct()
-    {
-        $this->salt = random_int(1, 99999999);
-
-        $date = new \DateTime("now", new \DateTimeZone('UTC'));
-        $this->ts = $date->getTimestamp() + 24 * 3600;
-
-        $this->privileges = [];
-    }
-
-    public function packContent()
-    {
-        $buffer = unpack("C*", pack("V", $this->salt));
-        $buffer = array_merge($buffer, unpack("C*", pack("V", $this->ts)));
-        $buffer = array_merge($buffer, unpack("C*", pack("v", sizeof($this->privileges))));
-        foreach ($this->privileges as $key => $value) {
-            $buffer = array_merge($buffer, unpack("C*", pack("v", $key)));
-            $buffer = array_merge($buffer, unpack("C*", pack("V", $value)));
-        }
-
-        return $buffer;
-    }
-
-    public function unpackContent($msg)
-    {
-        $pos = 0;
-        $salt = unpack("V", substr($msg, $pos, 4))[1];
-        $pos += 4;
-        $ts = unpack("V", substr($msg, $pos, 4))[1];
-        $pos += 4;
-        $size = unpack("v", substr($msg, $pos, 2))[1];
-        $pos += 2;
-
-        $privileges = [];
-        for ($i = 0; $i < $size; $i++) {
-            $key = unpack("v", substr($msg, $pos, 2));
-            $pos += 2;
-            $value = unpack("V", substr($msg, $pos, 4));
-            $pos += 4;
-            $privileges[$key[1]] = $value[1];
-        }
-        $this->salt = $salt;
-        $this->ts = $ts;
-        $this->privileges = $privileges;
-    }
-}
+use Illuminate\Support\Facades\Log;
 
 class AccessToken
 {
-    const Privileges = [
-        "kJoinChannel" => 1,
-        "kPublishAudioStream" => 2,
-        "kPublishVideoStream" => 3,
-        "kPublishDataStream" => 4,
-        "kPublishAudioCdn" => 5,
-        "kPublishVideoCdn" => 6,
+    public const Privileges = [
+        "kJoinChannel"               => 1,
+        "kPublishAudioStream"        => 2,
+        "kPublishVideoStream"        => 3,
+        "kPublishDataStream"         => 4,
+        "kPublishAudioCdn"           => 5,
+        "kPublishVideoCdn"           => 6,
         "kRequestPublishAudioStream" => 7,
         "kRequestPublishVideoStream" => 8,
-        "kRequestPublishDataStream" => 9,
-        "kInvitePublishAudioStream" => 10,
-        "kInvitePublishVideoStream" => 11,
-        "kInvitePublishDataStream" => 12,
-        "kAdministrateChannel" => 101,
-        "kRtmLogin" => 1000,
+        "kRequestPublishDataStream"  => 9,
+        "kInvitePublishAudioStream"  => 10,
+        "kInvitePublishVideoStream"  => 11,
+        "kInvitePublishDataStream"   => 12,
+        "kAdministrateChannel"       => 101,
+        "kRtmLogin"                  => 1000,
     ];
 
-    public $appID;
-    public $appCertificate;
-    public $channelName;
-    public $uid;
-    public $message;
+    public ?string $appID = null;
+
+    public ?string $appCertificate = null;
+
+    public ?string $channelName = null;
+
+    public ?string $uid = null;
+
+    public ?Message $message;
 
     public function __construct()
     {
         $this->message = new Message();
     }
 
-    public function setUid($uid)
+    public function setUid(?string $uid): void
     {
-        if ($uid === 0) {
-            $this->uid = "";
+        if ($uid === null) {
+            $this->uid = '';
         } else {
-            $this->uid = $uid . '';
+            $this->uid = $uid;
         }
     }
 
-    public function is_nonempty_string($name, $str)
+    public function is_nonempty_string(string $name, ?string $str): bool
     {
-        if (is_string($str) && $str !== "") {
+        if ($str !== null && $str !== "") {
             return true;
         }
-        echo $name . " check failed, should be a non-empty string";
+        Log::error("$name check failed, should be a non-empty string");
 
         return false;
     }
 
-    public static function init($appID, $appCertificate, $channelName, $uid)
+    public static function init(?string $appID, ?string $appCertificate, ?string $channelName, $uid): ?AccessToken
     {
         $accessToken = new AccessToken();
 
-        if (! $accessToken->is_nonempty_string("appID", $appID) ||
-            ! $accessToken->is_nonempty_string("appCertificate", $appCertificate) ||
-            ! $accessToken->is_nonempty_string("channelName", $channelName)) {
+        if (!$accessToken->is_nonempty_string("appID", $appID)
+            || !$accessToken->is_nonempty_string("appCertificate", $appCertificate)
+            || !$accessToken->is_nonempty_string("channelName", $channelName)) {
             return null;
         }
 
@@ -124,37 +77,37 @@ class AccessToken
         return $accessToken;
     }
 
-    public static function initWithToken($token, $appCertificate, $channel, $uid)
+    public static function initWithToken(?string $token, ?string $appCertificate, ?string $channel, ?string $uid): ?AccessToken
     {
         $accessToken = new AccessToken();
-        if (! $accessToken->extract($token, $appCertificate, $channel, $uid)) {
+        if (!$accessToken->extract($token, $appCertificate, $channel, $uid)) {
             return null;
         }
 
         return $accessToken;
     }
 
-    public function addPrivilege($key, $expireTimestamp)
+    public function addPrivilege(string $key, int $expireTimestamp): static
     {
         $this->message->privileges[$key] = $expireTimestamp;
 
         return $this;
     }
 
-    public function extract($token, $appCertificate, $channelName, $uid)
+    public function extract(?string $token, ?string $appCertificate, ?string $channelName, ?string $uid): bool
     {
         $ver_len = 3;
         $appid_len = 32;
         $version = substr($token, 0, $ver_len);
         if ($version !== "006") {
-            echo 'invalid version ' . $version;
+            echo 'invalid version '.$version;
 
             return false;
         }
 
-        if (! $this->is_nonempty_string("token", $token) ||
-            ! $this->is_nonempty_string("appCertificate", $appCertificate) ||
-            ! $this->is_nonempty_string("channelName", $channelName)) {
+        if (!$this->is_nonempty_string("token", $token)
+            || !$this->is_nonempty_string("appCertificate", $appCertificate)
+            || !$this->is_nonempty_string("channelName", $channelName)) {
             return false;
         }
 
@@ -162,7 +115,7 @@ class AccessToken
         $content = (base64_decode(substr($token, $ver_len + $appid_len, strlen($token) - ($ver_len + $appid_len))));
 
         $pos = 0;
-        $len = unpack("v", $content . substr($pos, 2))[1];
+        $len = unpack("v", $content.substr($pos, 2))[1];
         $pos += 2;
         $sig = substr($content, $pos, $len);
         $pos += $len;
@@ -175,11 +128,12 @@ class AccessToken
         $msg = substr($content, $pos, $msgLen);
 
         $this->appID = $appid;
+        //$this->message->unpackContent($msg);
         $message = new Message();
         $message->unpackContent($msg);
         $this->message = $message;
 
-        //non reversable values
+        //non reversible values
         $this->appCertificate = $appCertificate;
         $this->channelName = $channelName;
         $this->setUid($uid);
@@ -187,7 +141,7 @@ class AccessToken
         return true;
     }
 
-    public function build()
+    public function build(): string
     {
         $msg = $this->message->packContent();
         $val = array_merge(unpack("C*", $this->appID), unpack("C*", $this->channelName), unpack("C*", $this->uid), $msg);
@@ -199,13 +153,6 @@ class AccessToken
 
         $content = array_merge(unpack("C*", packString($sig)), unpack("C*", pack("V", $crc_channel_name)), unpack("C*", pack("V", $crc_uid)), unpack("C*", pack("v", count($msg))), $msg);
         $version = "006";
-        $ret = $version . $this->appID . base64_encode(implode(array_map("chr", $content)));
-
-        return $ret;
+        return $version.$this->appID.base64_encode(implode(array_map("chr", $content)));
     }
-}
-
-function packString($value)
-{
-    return pack("v", strlen($value)) . $value;
 }

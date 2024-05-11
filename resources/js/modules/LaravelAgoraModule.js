@@ -122,7 +122,7 @@ export default {
                 // Subscribe to a remote user.
                 await state.rtc.client.subscribe(user, mediaType);
                 console.log("subscribe success");
-                
+
                 // If the subscribed track is video.
                 if (mediaType === "video") {
                     // Get `RemoteVideoTrack` in the `user` object.
@@ -130,7 +130,7 @@ export default {
 
                     remoteVideoTrack.play('remote-video');
                 }
-                
+
                 // If the subscribed track is audio.
                 if (mediaType === "audio") {
                     // Get `RemoteAudioTrack` in the `user` object.
@@ -178,7 +178,7 @@ export default {
                 commit('setActiveUsers', newActiveUsers);
             });
 
-            state.echoChannel.listen(".Tipoff\\LaravelAgoraApi\\Events\\DispatchAgoraCall", async (data) => {
+            state.echoChannel.listen(".AbdullahFaqeir\\LaravelAgoraApi\\Events\\DispatchAgoraCall", async (data) => {
                 if (parseInt(data.recipientId) === parseInt(state.currentUser.id)) {
                     commit('setIncomingCaller', data.senderDisplayName);
                     commit('setIncomingCallerId', data.senderId);
@@ -190,21 +190,21 @@ export default {
 
                     // TODO: If they do accept the call, hang up on any other calls that they are
                     // involved in first before connecting to the incoming one.
-                    
+
                     commit('setAgoraChannel', data.agoraChannel);
                 }
             })
-            .listen(".Tipoff\\LaravelAgoraApi\\Events\\RejectAgoraCall", async (data) => {
+            .listen(".AbdullahFaqeir\\LaravelAgoraApi\\Events\\RejectAgoraCall", async (data) => {
                 if (parseInt(data.callerId) === parseInt(state.currentUser.id)) {
                     console.log("Call rejected.");
-                    
+
                     await dispatch('leaveAgoraChannel');
                     commit('setAgoraChannel', '');
                     commit('setCallOutgoing', false);
                     commit('setCallConnected', false);
                 }
             })
-            .listen(".Tipoff\\LaravelAgoraApi\\Events\\AgoraCallAccepted", async (data) => {
+            .listen(".AbdullahFaqeir\\LaravelAgoraApi\\Events\\AgoraCallAccepted", async (data) => {
                 if (parseInt(data.callerId) === parseInt(state.currentUser.id)) {
                     console.log("Call accepted.");
 
@@ -297,7 +297,7 @@ export default {
                 state.rtc.localAudioTrack.close();
                 commit('setLocalAudioTrack', null);
             }
-            
+
             if (state.rtc.localVideoTrack !== null) {
                 state.rtc.localVideoTrack.close();
                 commit('setLocalVideoTrack', null);

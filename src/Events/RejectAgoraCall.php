@@ -1,6 +1,6 @@
 <?php
 
-namespace Tipoff\LaravelAgoraApi\Events;
+namespace AbdullahFaqeir\LaravelAgoraApi\Events;
 
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -14,25 +14,22 @@ class RejectAgoraCall implements ShouldBroadcast
     use InteractsWithSockets;
     use SerializesModels;
 
-    public $callerId;
-    public $recipientId;
-
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($callerId, $recipientId)
-    {
-        $this->callerId = $callerId;
-        $this->recipientId = $recipientId;
+    public function __construct(
+        public string $callerId,
+        public string $recipientId
+    ) {
     }
 
     /**
      * Get the channels the event should broadcast on.
      */
-    public function broadcastOn()
+    public function broadcastOn(): PresenceChannel
     {
-        return new PresenceChannel(config('agora.channel_name'));
+        return new PresenceChannel(config('laravel-agora-api.channel_name'));
     }
 }

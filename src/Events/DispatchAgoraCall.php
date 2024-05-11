@@ -1,6 +1,6 @@
 <?php
 
-namespace Tipoff\LaravelAgoraApi\Events;
+namespace AbdullahFaqeir\LaravelAgoraApi\Events;
 
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -15,8 +15,11 @@ class DispatchAgoraCall implements ShouldBroadcast
     use SerializesModels;
 
     public $agoraChannel;
+
     public $senderId;
+
     public $senderDisplayName;
+
     public $recipientId;
 
     /**
@@ -37,6 +40,6 @@ class DispatchAgoraCall implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PresenceChannel(config('agora.channel_name'));
+        return new PresenceChannel(config('laravel-agora-api.channel_name'));
     }
 }

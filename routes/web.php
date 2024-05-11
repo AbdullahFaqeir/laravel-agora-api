@@ -1,9 +1,17 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Tipoff\LaravelAgoraApi\Http\Controllers\AgoraController;
+use AbdullahFaqeir\LaravelAgoraApi\Http\Controllers\AgoraController;
 
-Route::post('/retrieve-token', [AgoraController::class, 'retrieveToken'])->name('agora.retrieve-token');
-Route::post('/place-call', [AgoraController::class, 'placeCall'])->name('agora.place-call');
-Route::post('/accept-call', [AgoraController::class, 'acceptCall'])->name('agora.accept-call');
-Route::post('/reject-call', [AgoraController::class, 'rejectCall'])->name('agora.reject-call');
+Route::controller(AgoraController::class)
+     ->name('laravel-agora-api.')
+     ->group(function () {
+         Route::post('/retrieve-token', 'retrieveToken')
+              ->name('laravel-agora-api.retrieve-token');
+         Route::post('/place-call', 'placeCall')
+              ->name('laravel-agora-api.place-call');
+         Route::post('/accept-call', 'acceptCall')
+              ->name('laravel-agora-api.accept-call');
+         Route::post('/reject-call', 'rejectCall')
+              ->name('laravel-agora-api.reject-call');
+     });

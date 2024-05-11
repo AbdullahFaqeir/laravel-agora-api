@@ -1,16 +1,16 @@
 <?php
 
-namespace Tipoff\LaravelAgoraApi\Tests\Feature\Http;
+namespace AbdullahFaqeir\LaravelAgoraApi\Tests\Feature\Http;
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Event;
 use Mockery;
-use Tipoff\Authorization\Models\User;
-use Tipoff\LaravelAgoraApi\Events\AgoraCallAccepted;
-use Tipoff\LaravelAgoraApi\Events\DispatchAgoraCall;
-use Tipoff\LaravelAgoraApi\Events\RejectAgoraCall;
-use Tipoff\LaravelAgoraApi\Tests\TestCase;
+use AbdullahFaqeir\Authorization\Models\User;
+use AbdullahFaqeir\LaravelAgoraApi\Events\AgoraCallAccepted;
+use AbdullahFaqeir\LaravelAgoraApi\Events\DispatchAgoraCall;
+use AbdullahFaqeir\LaravelAgoraApi\Events\RejectAgoraCall;
+use AbdullahFaqeir\LaravelAgoraApi\Tests\TestCase;
 
 class AgoraControllerTest extends TestCase
 {
@@ -19,14 +19,14 @@ class AgoraControllerTest extends TestCase
 
     public function testUnauthenticatedUsersCannotRetrieveAToken()
     {
-        $response = $this->postJson(route('agora.retrieve-token'));
+        $response = $this->postJson(route('laravel-agora-api.retrieve-token'));
 
         $response->assertStatus(401);
     }
 
     public function testUnauthenticatedUsersCannotPlaceACall()
     {
-        $response = $this->postJson(route('agora.place-call'));
+        $response = $this->postJson(route('laravel-agora-api.place-call'));
 
         $response->assertStatus(401);
     }
@@ -34,7 +34,7 @@ class AgoraControllerTest extends TestCase
     public function testInvalidRequestsDoNotReturnAToken()
     {
         $response = $this->actingAs(User::factory()->create())
-            ->postJson(route('agora.retrieve-token'));
+            ->postJson(route('laravel-agora-api.retrieve-token'));
 
         $response->assertStatus(422);
     }
@@ -42,7 +42,7 @@ class AgoraControllerTest extends TestCase
     public function testInvalidRequestsDoNotReturnPlaceACall()
     {
         $response = $this->actingAs(User::factory()->create())
-            ->postJson(route('agora.place-call'));
+            ->postJson(route('laravel-agora-api.place-call'));
 
         $response->assertStatus(422);
     }
@@ -51,7 +51,7 @@ class AgoraControllerTest extends TestCase
     {
         $fakeTokenContents = 'an-Agora-token';
 
-        Mockery::namedMock('Tipoff\LaravelAgoraApi\AgoraDynamicKey\RtcTokenBuilder', 'Tipoff\LaravelAgoraApi\Tests\Feature\Http\RtcTokenBuilderStub')
+        Mockery::namedMock('AbdullahFaqeir\LaravelAgoraApi\AgoraDynamicKey\RtcTokenBuilder', 'AbdullahFaqeir\LaravelAgoraApi\Tests\Feature\Http\RtcTokenBuilderStub')
             ->shouldReceive('buildTokenWithUid')
             ->andReturn($fakeTokenContents);
 
@@ -59,7 +59,7 @@ class AgoraControllerTest extends TestCase
         $user->name = 'John Doe';
 
         $response = $this->actingAs($user)
-            ->postJson(route('agora.retrieve-token'), [
+            ->postJson(route('laravel-agora-api.retrieve-token'), [
                 'channel_name' => $this->faker->word,
             ]);
 
@@ -79,7 +79,7 @@ class AgoraControllerTest extends TestCase
         $user->name = 'John Doe';
 
         $response = $this->actingAs($user)
-            ->postJson(route('agora.place-call'), [
+            ->postJson(route('laravel-agora-api.place-call'), [
                 'channel_name' => $this->faker->word,
                 'recipient_id' => User::factory()->create()->id,
             ]);
@@ -97,7 +97,7 @@ class AgoraControllerTest extends TestCase
         $user->name = 'John Doe';
 
         $response = $this->actingAs($user)
-            ->postJson(route('agora.accept-call'), [
+            ->postJson(route('laravel-agora-api.accept-call'), [
                 'caller_id' => User::factory()->create()->id,
                 'recipient_id' => $user->id,
             ]);
@@ -115,7 +115,7 @@ class AgoraControllerTest extends TestCase
         $user->name = 'John Doe';
 
         $response = $this->actingAs($user)
-            ->postJson(route('agora.accept-call'), []);
+            ->postJson(route('laravel-agora-api.accept-call'), []);
 
         Event::assertNotDispatched(AgoraCallAccepted::class);
 
@@ -130,7 +130,7 @@ class AgoraControllerTest extends TestCase
         $user->name = 'John Doe';
 
         $response = $this->actingAs($user)
-            ->postJson(route('agora.reject-call'), [
+            ->postJson(route('laravel-agora-api.reject-call'), [
                 'caller_id' => User::factory()->create()->id,
                 'recipient_id' => $user->id,
             ]);
@@ -148,7 +148,7 @@ class AgoraControllerTest extends TestCase
         $user->name = 'John Doe';
 
         $response = $this->actingAs($user)
-            ->postJson(route('agora.reject-call'), []);
+            ->postJson(route('laravel-agora-api.reject-call'), []);
 
         Event::assertNotDispatched(RejectAgoraCall::class);
 

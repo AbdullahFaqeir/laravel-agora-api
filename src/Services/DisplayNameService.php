@@ -1,26 +1,17 @@
 <?php
 
-namespace Tipoff\LaravelAgoraApi\Services;
+namespace AbdullahFaqeir\LaravelAgoraApi\Services;
 
 use Exception;
 
 class DisplayNameService
 {
-    public static function getDisplayName($user)
+    public static function getDisplayName($user): string
     {
         $pieces = [];
-
-        foreach (config('agora.user_display_name.fields') as $field) {
-            if (isset($user->{$field})) {
-                $pieces[] = $user->{$field};
-            } else {
-                throw new Exception("Nonexistent object property: '{$field}' specified in username generation configuration.");
-            }
+        foreach (config('laravel-agora-api.user_display_name.fields') as $field) {
+            $pieces[] = $user->{$field} ?? null;
         }
-
-        return implode(
-            config('agora.user_display_name.separator'),
-            $pieces
-        );
+        return implode(config('laravel-agora-api.user_display_name.separator'), $pieces);
     }
 }
