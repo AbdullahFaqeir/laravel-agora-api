@@ -10,3 +10,5 @@ docs
 phpunit.xml
 psalm.xml
 vendor
+/node_modules/
+/package-lock.json

@@ -1,63 +1,63 @@
 {
-  "name": "abdullahfaqeir/laravel-agora-api",
-  "description": "Laravel Package for wrapper of Agora API",
-  "keywords": [
-    "tipoff",
-    "abdullahfaqeir",
-    "agora",
-    "agora-api",
-    "laravel-agora-api",
-    "laravel"
-  ],
-  "homepage": "https://github.com/abdullahfaqeir/laravel-agora-api",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "TipOff",
-      "email": "packages@tipoff.com",
-      "role": "Developer"
+    "name": "abdullahfaqeir/laravel-agora-api",
+    "description": "Laravel Package for wrapper of Agora API",
+    "keywords": [
+        "tipoff",
+        "abdullahfaqeir",
+        "agora",
+        "agora-api",
+        "laravel-agora-api",
+        "laravel"
+    ],
+    "homepage": "https://github.com/abdullahfaqeir/laravel-agora-api",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "TipOff",
+            "email": "packages@tipoff.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Abdullah Al-Faqeir",
+            "email": "abdullah@al-faqeir.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.1|^8.2",
+        "laravel/framework": "^10.0|^11.0",
+        "spatie/laravel-package-tools": "^1.16.4"
     },
-    {
-      "name": "Abdullah Al-Faqeir",
-      "email": "abdullah@al-faqeir.com",
-      "role": "Developer"
-    }
-  ],
-  "require": {
-    "php": "^8.1|^8.2",
-    "laravel/framework": "^10.0|^11.0",
-    "spatie/laravel-package-tools": "dev-main"
-  },
-  "require-dev": {
-  },
-  "autoload": {
-    "psr-4": {
-      "AbdullahFaqeir\\LaravelAgoraApi\\": "src"
+    "require-dev": {
     },
-    "files": [
-      "app/helpers.php"
-    ]
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "AbdullahFaqeir\\LaravelAgoraApi\\Tests\\": "tests"
-    }
-  },
-  "scripts": {
-    "psalm": "vendor/bin/psalm",
-    "test": "vendor/bin/phpunit --colors=always",
-    "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
-  },
-  "config": {
-    "sort-packages": true
-  },
-  "extra": {
-    "laravel": {
-      "providers": [
-        "AbdullahFaqeir\\LaravelAgoraApi\\LaravelAgoraApiServiceProvider"
-      ]
-    }
-  },
-  "minimum-stability": "dev",
-  "prefer-stable": true
+    "autoload": {
+        "psr-4": {
+            "AbdullahFaqeir\\LaravelAgoraApi\\": "src"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "AbdullahFaqeir\\LaravelAgoraApi\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "psalm": "vendor/bin/psalm",
+        "test": "vendor/bin/phpunit --colors=always",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "AbdullahFaqeir\\LaravelAgoraApi\\LaravelAgoraApiServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

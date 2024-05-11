@@ -21,7 +21,7 @@ class LaravelAgoraApiServiceProvider extends PackageServiceProvider
         $this->loadRoutesFrom(__DIR__.'/../routes/channels.php');
 
         $this->publishes([
-            __DIR__.'/../config/laravel-agora-api.php.php' => config_path('laravel-agora-api.php'),
+            __DIR__.'/../config/laravel-agora-api.php' => config_path('laravel-agora-api.php'),
         ], 'laravel-agora-api-config');
 
         $this->publishes([

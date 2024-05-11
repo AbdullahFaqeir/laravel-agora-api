@@ -191,7 +191,6 @@ Please see [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
 
 - [TipOff](https://github.com/TipOff)
 - [Abdullah Al-Faqeir](https://github.com/abdullahfaqeir)
-- [All Contributors](../../contributors)
 
 ## License
 
